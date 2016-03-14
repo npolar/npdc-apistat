@@ -1,7 +1,7 @@
 {
-  "name": "npdc-dataset",
-  "version": "1.0.1",
-  "description": "NPDC dataset app",
+  "name": "npdc-apistat",
+  "version": "0.0.1",
+  "description": "Get statistics from API parameters",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,7 @@
   "author": "npolar",
   "license": "MIT",
   "private": true,
-  "repository": "https://github.com/npolar/npdc-dataset",
+  "repository": "https://github.com/npolar/npdc-apistat",
   "dependencies": {
     "angular": "^1.4.9",
     "d3": "^3.5.16",
