@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="npdcApistatApp" ng-cloak ng-strict-di manifest="app.manifest">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<base href="/dataset/"/>
+	<title>Apistats</title>
+	<link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+	<link href="/assets/npdc-common-<!-- @echo COMMON_VERSION -->.css" rel="stylesheet">
+	<link href="npdc-apistat-<!-- @echo BRANCH -->-latest.css" rel="stylesheet">
+	<link rel="stylesheet" href="./show/show.css" />
+	<script>var VERSION = '<!-- @echo VERSION -->'; console.log("npdc-dataset version:", VERSION);</script>
+</head>
+
+<body>
+  <npdc:app></npdc:app>
+	<!-- @if PROD -->
+	<script src="/assets/npdc-common-<!-- @echo COMMON_VERSION -->.js"></script>
+	<!-- @endif -->
+  <script src="app.js"></script>
+<!--   <script type="text/javascript" src="../node_modules/d3/d3.js" charset="utf-8"></script> -->
+ <!-- <script type="text/javascript" src="../node_modules/d3/src/layout/index.js"></script> -->
+
+</body>
+</html>

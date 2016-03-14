@@ -1,0 +1,36 @@
+/*Style sheet for api_top*/
+
+
+/*style sheet for bar plot */
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: black;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+/*style sheet for pie chart*/
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
