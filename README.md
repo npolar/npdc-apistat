@@ -1,2 +1,2 @@
-# npdc-dataset
-NPDC dataset app
+# npdc-apistat
+Get statistics from API parameters.
