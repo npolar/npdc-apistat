@@ -9,7 +9,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
   });
   $scope.resource = Dataset;
 
-
+ //$scope.apistat_err = "waiting.."
     //Initialize parameter array
      $scope.keys = [];
      //Initalize visualisation choice
@@ -22,12 +22,14 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
          $scope.keysS = (results.data.ids).map(function(el) {
                   return el.replace('-api','');
-            });
+         });
         });
 
 
      //Get schema
     $scope.submit = function() {
+      $scope.apistat_err = null;
+      $scope.keys = [];
 
        var schema = $scope.schema2;
 
@@ -39,17 +41,26 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
          //First get the schema name from api_service
          var link = 'https://apptest.data.npolar.no:3000/service/'+schema+'-api.json?callback=JSON_CALLBACK';
 
-
          SchemaDBSearch.getValues(link).then( function(results) {
            var new_schema = results.data["accepts"]["application/json"];
 
+           //If new schema link contains .json in the end it must be removed
+           console.log(new_schema);
+           var new_schema2 = new_schema.replace(".json","");
+
+           console.log(new_schema2);
+           console.log("-------");
 
            //Get schema from input
-           var link = new_schema +'?callback=JSON_CALLBACK&format=json';
+           var link2 = new_schema2 +'?callback=JSON_CALLBACK&format=json';
            //var link = 'https://apptest.data.npolar.no:3000/schema/'+schema2+'?callback=JSON_CALLBACK&format=json';
+           console.log(link2);
 
-           SchemaDBSearch.getValues(link).then( function(results) {
+           SchemaDBSearch.getValues(link2)
+             .then( function(results) {
               //on success
+               console.log(results);
+                console.log("results");
 
                var keys2 = Object.keys(results.data.properties);
 
@@ -58,7 +69,13 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
                        // return schema + ' - ' + el;
                });
 
-           });
+           })
+             .catch(function(fallback){
+               console.log(fallback);
+               $scope.apistat_err = "Could not find the variables."
+               console.log("fallback");
+             });
+
        });
       });
     };
@@ -73,6 +90,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
           var vars2 = ($scope.vars[0]).split(" - ");
           var varsV = $scope.varsV;
+
 
 
           var link = 'https://apptest.data.npolar.no:3000/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000&callback=JSON_CALLBACK';

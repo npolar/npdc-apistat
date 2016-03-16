@@ -13,14 +13,16 @@
    </select>
 
    <input type="submit" id="submit" value="Fetch schema(s)" />
+
    <br />
    <br />
 </form>
+
 <form id="submit_vars" ng-submit="submit_vars()">
    <label for="vars">Select variables: </label>
    <select id="vars" ng-model="vars" multiple>
         <option id="selected" ng-repeat="item in keys" value="{{item}}">{{item}}</option>
-      </select><br /><br />
+      </select> {{apistat_err}}<br /><br />
       <label for="varsV">Select visualisation: </label>
    <select id="varsV" ng-model="varsV" multiple>
         <option id="selectedV" ng-repeat="itemV in keysV" value="{{itemV}}">{{itemV}}</option>
@@ -34,6 +36,7 @@
   <div id="chart" class="chart"></div>
 
 </form>
+
 </div>
 
 
