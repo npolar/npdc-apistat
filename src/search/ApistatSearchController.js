@@ -15,12 +15,11 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
      //Initalize visualisation choice
      $scope.keysV = ['bar plot', 'pie chart'];
 
-     var link = 'https://apptest.data.npolar.no:3000/service/_ids.json';
+     var link = 'https://apptest.data.npolar.no:3000/service/_ids.json?callback=JSON_CALLBACK';
      SchemaDBSearch.getValues(link).then(
        function(results) {
         // on success
 
-        console.log(results.data.ids);
          $scope.keysS = (results.data.ids).map(function(el) {
                   return el.replace('-api','');
             });
@@ -35,13 +34,18 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
        //Fetch input variables one by one
        schema.map( function(schema2) {
 
+        console.log(schema2);
+        console.log("schema2");
+
        //Get schema from input
-       var link = 'https://apptest.data.npolar.no:3000/schema/' + schema2 + '.json';
+       //var link = 'https://apptest.data.npolar.no:3000/schema/' + schema2 + '.json?callback=JSON_CALLBACK';
+       var link = 'https://apptest.data.npolar.no:3000/schema/'+schema2+'?callback=JSON_CALLBACK&format=json';
 
        SchemaDBSearch.getValues(link).then( function(results) {
          //on success
 
          console.log(results);
+         console.log("results");
          var keys2 = Object.keys(results.data.properties);
 
          console.log(keys2);
@@ -62,7 +66,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
           var vars2 = ($scope.vars[0]).split(" - ");
           var varsV = $scope.varsV;
 
-          var link = 'https://apptest.data.npolar.no:3000/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000';
+          var link = 'https://apptest.data.npolar.no:3000/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000&callback=JSON_CALLBACK';
 
           SchemaDBSearch.getValues(link).then( function(results) {
               var prop = vars2[1];

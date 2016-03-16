@@ -6,7 +6,7 @@
 var SchemaDBSearch = function($resource, $http){
 
   var getValues = function(Inputlink) {
-    return $http.get(Inputlink);
+    return $http.jsonp(Inputlink);
   };
 
   return {
