@@ -31,28 +31,34 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
        var schema = $scope.schema2;
 
+
        //Fetch input variables one by one
-       schema.map( function(schema2) {
+       schema.map( function(schema) {
 
-        console.log(schema2);
-        console.log("schema2");
 
-       //Get schema from input
-       //var link = 'https://apptest.data.npolar.no:3000/schema/' + schema2 + '.json?callback=JSON_CALLBACK';
-       var link = 'https://apptest.data.npolar.no:3000/schema/'+schema2+'?callback=JSON_CALLBACK&format=json';
+         //First get the schema name from api_service
+         var link = 'https://apptest.data.npolar.no:3000/service/'+schema+'-api.json?callback=JSON_CALLBACK';
 
-       SchemaDBSearch.getValues(link).then( function(results) {
-         //on success
 
-         console.log(results);
-         console.log("results");
-         var keys2 = Object.keys(results.data.properties);
+         SchemaDBSearch.getValues(link).then( function(results) {
+           var new_schema = results.data["accepts"]["application/json"];
 
-         console.log(keys2);
-         $scope.keys = (keys2).map(function(el) {
-                  return schema2 + ' - ' + el;
-         });
 
+           //Get schema from input
+           var link = new_schema +'?callback=JSON_CALLBACK&format=json';
+           //var link = 'https://apptest.data.npolar.no:3000/schema/'+schema2+'?callback=JSON_CALLBACK&format=json';
+
+           SchemaDBSearch.getValues(link).then( function(results) {
+              //on success
+
+               var keys2 = Object.keys(results.data.properties);
+
+               (keys2).map(function(el) {
+                         ($scope.keys).push(schema + ' - ' + el);
+                       // return schema + ' - ' + el;
+               });
+
+           });
        });
       });
     };
@@ -63,8 +69,11 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
           //Fetch scope vars -var 0 only
           //Need to strip off database name first
           //Vars2 is the variable
+          console.log($scope.vars[0]);
+
           var vars2 = ($scope.vars[0]).split(" - ");
           var varsV = $scope.varsV;
+
 
           var link = 'https://apptest.data.npolar.no:3000/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000&callback=JSON_CALLBACK';
 
