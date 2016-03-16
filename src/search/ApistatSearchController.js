@@ -28,8 +28,12 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
      //Get schema
     $scope.submit = function() {
+      //Reset error msg
       $scope.apistat_err = null;
+      //Reset select menu variables
       $scope.keys = [];
+      //Remove these variables from list
+      var remove_arr = ["id", "rev", "collection", "schema", "created", "updated", "_id", "_rev", "_deleted"];
 
        var schema = $scope.schema2;
 
@@ -59,8 +63,13 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
                var keys2 = Object.keys(results.data.properties);
 
+
+
                (keys2).map(function(el) {
+                        if (remove_arr.indexOf(el) < 0) {
+                         console.log(el);
                          ($scope.keys).push(schema + ' - ' + el);
+                       }
                });
 
              }) //on failure
