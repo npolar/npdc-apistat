@@ -45,35 +45,28 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
            var new_schema = results.data["accepts"]["application/json"];
 
            //If new schema link contains .json in the end it must be removed
-           console.log(new_schema);
            var new_schema2 = new_schema.replace(".json","");
-
-           console.log(new_schema2);
-           console.log("-------");
 
            //Get schema from input
            var link2 = new_schema2 +'?callback=JSON_CALLBACK&format=json';
-           //var link = 'https://apptest.data.npolar.no:3000/schema/'+schema2+'?callback=JSON_CALLBACK&format=json';
-           console.log(link2);
+
 
            SchemaDBSearch.getValues(link2)
+             //on success
              .then( function(results) {
               //on success
-               console.log(results);
-                console.log("results");
+
 
                var keys2 = Object.keys(results.data.properties);
 
                (keys2).map(function(el) {
                          ($scope.keys).push(schema + ' - ' + el);
-                       // return schema + ' - ' + el;
                });
 
-           })
+             }) //on failure
              .catch(function(fallback){
-               console.log(fallback);
                $scope.apistat_err = "Could not find the variables."
-               console.log("fallback");
+
              });
 
        });
