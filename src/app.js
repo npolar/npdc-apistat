@@ -4,11 +4,16 @@ var AutoConfig = npdcCommon.AutoConfig;
 var angular = require('angular');
 
 
+
 var npdcApistatApp = angular.module('npdcApistatApp', ['npdcCommon']);
 
 npdcApistatApp.controller('ApistatShowController', require('./show/ApistatShowController'));
 npdcApistatApp.controller('ApistatSearchController', require('./search/ApistatSearchController'));
 npdcApistatApp.factory('SchemaDBSearch', require('./search/SchemaDBSearch'));
+npdcApistatApp.factory('PieChart', require('./stats/PieChart'));
+npdcApistatApp.factory('BarPlot', require('./stats/BarPlot'));
+
+
 
 
 

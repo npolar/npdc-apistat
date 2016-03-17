@@ -1,8 +1,8 @@
 'use strict';
 
-var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConfig, SchemaDBSearch) {
+var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConfig, SchemaDBSearch, PieChart, BarPlot) {
   'ngInject';
-  var d3 = require('d3');
+
   //Initalize visualisation choice
   $scope.keysV = ['bar plot', 'pie chart'];
 
@@ -163,149 +163,24 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
                    jsonData.push(jsonObj);
               }
 
-              console.log("jsonObj and jsonData");
-              console.log(jsonData);
-              //Get json object
-              //var jsonData = JSON.stringify(jsonObj);
-
 
               //Choose type of visualisation
               switch($scope.varsV[0]) {
                 case "pie chart": {
                       //  create_pie_chart(outcomes, jsonData, $scope.explanation);
-                      create_pie_chart(jsonData, $scope.explanation);
-                        break;
+                      PieChart.PieChart(jsonData, $scope.explanation);
+                      break;
                } case "bar plot": {
-                        create_bar_plot(jsonData, $scope.name_y_axis, $scope.name_x_axis, $scope.explanation);
-                        break;
+                      BarPlot.BarPlot(jsonData, $scope.name_y_axis, $scope.name_x_axis, $scope.explanation);
+                      break;
                } default: {
-                        create_bar_plot(jsonData, $scope.name_y_axis, $scope.name_x_axis, $scope.explanation);
+                      BarPlot.BarPlot(jsonData, $scope.name_y_axis, $scope.name_x_axis, $scope.explanation);
                       }
               }
 
           }); //vars_res
 
        }; //submit_vars
-
-       function create_pie_chart(jsonData, explanation) {
-
-                var width = 960,
-                height = 500,
-                radius = Math.min(width, height) / 2;
-
-            //The number of colors to display with the pie chart
-            var color = d3.scale.ordinal()
-                .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00",
-                  "#96abc5", "#8589a6", "#756888", "#63486b", "#a75d56", "#d8743c", "#f58c00"]);
-
-
-            var arc = d3.svg.arc()
-                .outerRadius(radius - 10)
-                .innerRadius(0);
-
-            var labelArc = d3.svg.arc()
-                .outerRadius(radius - 40)
-                .innerRadius(radius - 40);
-
-
-            var pie = d3.layout.pie()
-                .sort(null)
-                .value(function(d) { return d.count; });
-
-            var svg = d3.select(".chart").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-              var g = svg.selectAll(".arc")
-                  .data(pie(jsonData))
-                .enter().append("g")
-                  .attr("class", "arc");
-
-              g.append("path")
-                  .attr("d", arc)
-                  .style("fill", function(d) { return color(d.data.outcome); });
-
-              g.append("text")
-                  .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-                  .attr("dy", ".35em")
-                  .text(function(d) { return d.data.outcome; });
-          //  });
-
-       /*     function type(d) {
-              d.count = +d.count;
-              return d;
-            } */
-        }
-
-        //Create bar plot
-       function create_bar_plot(jsonData, y_axis_text, x_axis_text, explanation) {
-
-             console.log('create_bar_plot');
-
-             var margin = {top: 20, right: 20, bottom: 30, left: 40},
-                  width = 960 - margin.left - margin.right,
-                  height = 500 - margin.top - margin.bottom;
-
-              var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
-
-              var y = d3.scale.linear()
-                  .range([height, 0]);
-
-              var xAxis = d3.svg.axis()
-                  .scale(x)
-                  .orient("bottom");
-
-              var yAxis = d3.svg.axis()
-                  .scale(y)
-                  .orient("left")
-                  .ticks(10, "%");
-
-              var svg = d3.select(".chart").append("svg")
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-                console.log("domains:");
-                console.log(jsonData);
-
-                x.domain(jsonData.map(function(d) { console.log(d.outcome); return d.outcome; }));
-                y.domain([0, d3.max(jsonData, function(d) { console.log(d.count); return d.count; })]);
-
-                svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
-
-                svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis)
-                  .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", 6)
-                    .attr("dy", ".71em")
-                    .style("text-anchor", "end")
-                    .text(y_axis_text);
-
-                svg.selectAll(".bar")
-                    .data(jsonData)
-                  .enter().append("rect")
-                    .attr("class", "bar")
-                    .attr("x", function(d) { return x(d.outcome); })
-                    .attr("width", x.rangeBand())
-                    .attr("y", function(d) { return y(d.count); })
-                    .attr("height", function(d) { return height - y(d.count); });
-
-
-        /*      function type(d) {
-                d.count = +d.countr;
-                return d;
-              } */
-
-       }
 
 
 };
