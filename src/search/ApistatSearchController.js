@@ -3,19 +3,20 @@
 var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConfig, SchemaDBSearch) {
   'ngInject';
   var d3 = require('d3');
+  //Initalize visualisation choice
+  $scope.keysV = ['bar plot', 'pie chart'];
 
   $controller('NpolarBaseController', {
     $scope: $scope
   });
   $scope.resource = Dataset;
 
-  var base = 'https://apptest.data.npolar.no:3000';
+  //var base = 'https://apptest.data.npolar.no:3000';
+  var base = 'https://api.npolar.no';
 
- //$scope.apistat_err = "waiting.."
-    //Initialize parameter array
-     $scope.keys = [];
-     //Initalize visualisation choice
-     $scope.keysV = ['bar plot', 'pie chart'];
+  //Initialize parameter array
+  $scope.keys = [];
+
 
      var link = base + '/service/_ids.json?callback=JSON_CALLBACK';
      SchemaDBSearch.getValues(link).then(
@@ -48,7 +49,7 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
          var link = base +'/service/'+schema+'-api.json?callback=JSON_CALLBACK';
 
          SchemaDBSearch.getValues(link).then( function(results) {
-           var new_schema = results.data["accepts"]["application/json"];
+           var new_schema = results.data.accepts["application/json"];
 
            //If new schema link contains .json in the end it must be removed
            var new_schema2 = new_schema.replace(".json","");
@@ -61,7 +62,6 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
              //on success
              .then( function(results) {
               //on success
-
 
                var keys2 = Object.keys(results.data.properties);
 
@@ -93,7 +93,7 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
           console.log($scope.vars[0]);
 
           var vars2 = ($scope.vars[0]).split(" - ");
-          var varsV = $scope.varsV;
+          //var varsV = $scope.varsV;
 
 
 
@@ -115,13 +115,13 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
 
               //Count values in array..accumulate values
               var u = {}, a = [];
-              for(var i = 0, l = data2.length; i < l; ++i){
-                    if(u.hasOwnProperty(data2[i])) {
-                       u[data2[i]]++;
+              for(var j = 0, l = data2.length; j < l; ++j){
+                    if(u.hasOwnProperty(data2[j])) {
+                       u[data2[j]]++;
                        continue;
                     }
-                    a.push(data2[i]);
-                    u[data2[i]] = 1;
+                    a.push(data2[j]);
+                    u[data2[j]] = 1;
               }
 
               //Get values
@@ -131,8 +131,8 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
               }
 
               //Find maximum value, get height of bar plot (scale)
-              var arrayMax = Function.prototype.apply.bind(Math.max, null);
-              var maximum = arrayMax(values);
+             // var arrayMax = Function.prototype.apply.bind(Math.max, null);
+             //var maximum = arrayMax(values);
              // var scale = 1000/maximum;
 
               //data now holds the number of (all) possible outcomes from data2
@@ -156,10 +156,10 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
               var undef = outcomes.indexOf(undefined);
               outcomes[undef] = 'undefined';
 
-              for (var i = 0; i < values.length; i++) {
+              for (var k = 0; k < values.length; k++) {
                     var jsonObj = {};
-                   jsonObj.outcome =  outcomes[i];
-                   jsonObj.count = values[i];
+                   jsonObj.outcome =  outcomes[k];
+                   jsonObj.count = values[k];
                    jsonData.push(jsonObj);
               }
 
@@ -233,10 +233,10 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
                   .text(function(d) { return d.data.outcome; });
           //  });
 
-            function type(d) {
+       /*     function type(d) {
               d.count = +d.count;
               return d;
-            }
+            } */
         }
 
         //Create bar plot
@@ -248,8 +248,7 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
                   width = 960 - margin.left - margin.right,
                   height = 500 - margin.top - margin.bottom;
 
-              var x = d3.scale.ordinal()
-                  .rangeRoundBands([0, width], .1);
+              var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 
               var y = d3.scale.linear()
                   .range([height, 0]);
@@ -301,10 +300,10 @@ var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConf
                     .attr("height", function(d) { return height - y(d.count); });
 
 
-              function type(d) {
+        /*      function type(d) {
                 d.count = +d.countr;
                 return d;
-              }
+              } */
 
        }
 
