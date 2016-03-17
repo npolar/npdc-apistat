@@ -1,6 +1,6 @@
 'use strict';
 
-var ApistatSearchController = function($scope, $location, $controller, $filter, Dataset, npdcAppConfig, SchemaDBSearch) {
+var ApistatSearchController = function($scope, $controller, Dataset, npdcAppConfig, SchemaDBSearch) {
   'ngInject';
   var d3 = require('d3');
 
@@ -9,13 +9,15 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
   });
   $scope.resource = Dataset;
 
+  var base = 'https://apptest.data.npolar.no:3000';
+
  //$scope.apistat_err = "waiting.."
     //Initialize parameter array
      $scope.keys = [];
      //Initalize visualisation choice
      $scope.keysV = ['bar plot', 'pie chart'];
 
-     var link = 'https://apptest.data.npolar.no:3000/service/_ids.json?callback=JSON_CALLBACK';
+     var link = base + '/service/_ids.json?callback=JSON_CALLBACK';
      SchemaDBSearch.getValues(link).then(
        function(results) {
         // on success
@@ -43,7 +45,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
 
          //First get the schema name from api_service
-         var link = 'https://apptest.data.npolar.no:3000/service/'+schema+'-api.json?callback=JSON_CALLBACK';
+         var link = base +'/service/'+schema+'-api.json?callback=JSON_CALLBACK';
 
          SchemaDBSearch.getValues(link).then( function(results) {
            var new_schema = results.data["accepts"]["application/json"];
@@ -74,7 +76,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
              }) //on failure
              .catch(function(fallback){
-               $scope.apistat_err = "Could not find the variables."
+               $scope.apistat_err = "Could not find the variables.";
 
              });
 
@@ -95,7 +97,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
 
 
 
-          var link = 'https://apptest.data.npolar.no:3000/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000&callback=JSON_CALLBACK';
+          var link = base + '/' + $scope.schema2 + '/?q=&fields=' + vars2[1] + '&limit=5000&callback=JSON_CALLBACK';
 
           SchemaDBSearch.getValues(link).then( function(results) {
               var prop = vars2[1];
@@ -131,7 +133,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
               //Find maximum value, get height of bar plot (scale)
               var arrayMax = Function.prototype.apply.bind(Math.max, null);
               var maximum = arrayMax(values);
-              var scale = 1000/maximum;
+             // var scale = 1000/maximum;
 
               //data now holds the number of (all) possible outcomes from data2
               var outcomes = a;
@@ -155,11 +157,11 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
               outcomes[undef] = 'undefined';
 
               for (var i = 0; i < values.length; i++) {
-                    var jsonObj = new Object();
+                    var jsonObj = {};
                    jsonObj.outcome =  outcomes[i];
                    jsonObj.count = values[i];
                    jsonData.push(jsonObj);
-              };
+              }
 
               console.log("jsonObj and jsonData");
               console.log(jsonData);
@@ -235,8 +237,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
               d.count = +d.count;
               return d;
             }
-
-        };
+        }
 
         //Create bar plot
        function create_bar_plot(jsonData, y_axis_text, x_axis_text, explanation) {
@@ -305,7 +306,7 @@ var ApistatSearchController = function($scope, $location, $controller, $filter, 
                 return d;
               }
 
-       };
+       }
 
 
 };
